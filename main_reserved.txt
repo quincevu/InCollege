@@ -1,0 +1,226 @@
+#checks if file is empty if not, converts file into dictionary DS to store user name and password.
+users = {}
+jobs = {}
+
+if os.stat("userInfo.txt").st_size != 0:
+    with open("userInfo.txt") as f:
+        for line in f:
+            (key, val, first, last) = line.split()
+            users[key] = val
+
+
+def getUser():
+    userName = input("\nCreate username: ")
+    return userName
+
+#Displays login menu
+def displayLoginMenu():
+    #print(db.keys())
+    #print(db["g"])
+    print("Strory wil be here \n")
+    print("\n")
+    print("Select an option:")
+    print("1-Play a video ")
+    print("2-Use existing InCollege account")
+    print("3-Create new account \n")
+
+    status = input()
+    if status == "1":
+        playVideo()
+    elif status == "2":
+        oldUser()
+    elif status == "3":
+        newUser()
+    else:
+        print("\n invalid selection \n")
+        displayLoginMenu()
+
+
+#handles creation of password and adds new user to file if password requirements are met
+def password(userName):
+    upper, special, digit = 0, 0, 0
+    specialChar = "!@#$%^&*()-+?_=,<>/"
+    userPassword = input("Create password: ")
+
+    if (len(userPassword) < 8 or len(userPassword) > 12):
+        passwordCorrect = False
+        print("\nPassword doesnt meet the requirements\n")
+        print("Select an option to continue:\n")
+        print("1. Try again\n")
+        print("2. Return\n")
+
+        choice = input()
+
+        if choice == "1":
+            password(userName)
+        else:
+            displayLoginMenu()
+
+    else:
+        for i in userPassword:
+            # counting uppercase alphabets
+            if i.isupper() and upper != 1:
+                upper += 1
+
+            # counting digits
+            if i.isdigit():
+                digit += 1
+
+            # counting the mentioned special characters
+            for char in specialChar:
+                if i == char:
+                    special += 1
+
+        if upper >= 1 and digit >= 1 and special >= 1:
+            passwordCorrect = True
+            file = open("userInfo.txt", 'a')
+            file.write(userName + " " + userPassword + "\n")
+            file.close()
+            print("\n Account created\n")
+            displayMenu()
+
+        else:
+            passwordCorrect = False
+            print("\nPassword doesnt meet the requirements\n")
+            print("Select an option to continue:\n")
+            print("1. Try again\n")
+            print("2. Return\n")
+
+            choice = input()
+
+            if choice == "1":
+                password(userName)
+            else:
+                displayLoginMenu()
+
+
+#checks if max user limit has been reached
+#if not reached then allows user to enter username and calls password function
+def newUser():
+    #checks number of users
+  #create a function that has the number of users then call the function here
+    if len(users) >= 5:
+        maxUser = True
+        print(
+            "All permitted accounts have been created,please come back later.\n"
+        )
+        displayLoginMenu()
+    else:
+        userName = getUser()
+        #checks if username already exists, if yes, prompts user to     reenter
+        for user in users:
+            if user == userName:
+                userNameCorrect = False
+                print("\n Username is not available")
+                print("Select an option to continue:\n")
+                print("1. Try again\n")
+                print("2. Return\n")
+
+                choice = input()
+
+                if choice == "1":
+                    print("Please choose another username")
+                    newUser()
+                else:
+                    displayLoginMenu()
+
+    #calls function to check for password requirements
+    userNameCorrect = True
+    password(userName)
+
+#create a function that checks to see how many users the system has and returns true or false
+
+
+#allows user to login and allows reattempts upon incorrect entry
+def oldUser():
+    userName = getUser()
+    passw = input("Enter password: ")
+
+    if userName in users:
+        if users[userName] == passw:
+            loginSuccess = True
+            print("\nYou have successfully logged in \n")
+            displayMenu()
+        else:
+            loginSuccess = False
+            print("\nIncorrect username / password, please try   again\n")
+    else:
+        loginSuccess = False
+        print("\nIncorrect username / password, please try   again\n")
+        oldUser()
+
+
+#displays error message when Search For a Job is selected
+def searchJob():
+    print("Page Under Construction")
+
+
+#displays error message when Find Someone You Know is selected
+def findSomeone():
+    print("Page Under Construction")
+
+
+
+#displays list of skills and processes user selection and calls appropriate function
+def learnSkill():
+    print("Select an option:")
+    print("1. Python")
+    print("2. Java")
+    print("3. C++")
+    print("4. Debugging")
+    print("5. Testing")
+    print("6. Return to Menu")
+
+    selection = input()
+
+    if selection == "1":
+        print("Page Under Construction")
+
+    elif selection == "2":
+        print("Page Under Construction")
+
+    elif selection == "3":
+        print("Page Under Construction")
+
+    elif selection == "4":
+        print("Page Under Construction")
+
+    elif selection == "5":
+        print("Page Under Construction")
+
+    elif selection == "6":
+        displayMenu()
+
+    else:
+        print("Invalid option")
+
+
+#displays error message when Find Someone You Know is selected
+def playVideo():
+    print("video is now playing...")
+
+
+#displays main menu and processes user selection and calls appropriate function
+def displayMenu():
+    print("Select an option:")
+    print("1. job search/internship")
+    print("2. Post a job ")
+    print("3. Learn a new skill")
+    print("4. Find someone you know ")
+
+    menuSelection = input()
+
+    if menuSelection == "1":
+        searchJob()
+
+    elif menuSelection == "2":
+        postJob()
+
+    elif menuSelection == "3":
+        learnSkill()
+
+    elif menuSelection == "4":
+        findSomeone()
+    else:
+        print("Invalid option")
+        displayMenu()
